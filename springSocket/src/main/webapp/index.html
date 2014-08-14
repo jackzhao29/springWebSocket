@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+<meta charset="UTF-8">
+<title>ws</title>
+<script type="text/javascript" src="resource/script/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="resource/script/sockjs-0.3.4.js"></script>
+<script type="text/javascript" src="resource/script/stomp.js"></script>
+<script type="text/javascript">
+	$(function() {
+
+		var stompClient = null;
+
+		$('.v').on('click', function() {
+
+			$.get('./', {
+				i : 'x'
+			}, function(data) {
+				console.info(data);
+			}, 'json');
+
+		});
+
+		$('.w').on('click', function() {
+
+			var socket = new SockJS('/hello');
+
+			stompClient = Stomp.over(socket);
+
+			stompClient.connect({}, function(frame) {
+				//setConnected(true);
+				console.log('Connected...: ' + frame);
+				stompClient.subscribe('/topic/greetings', function(greeting) {
+					console.info('>>>>>>' + JSON.parse(greeting.body).content);
+				});
+			});
+
+		});
+
+		$('.s').on('click', function() {
+			stompClient.send("/app/hello", {}, JSON.stringify({
+				'name' : 'xiaocl'
+			}));
+		});
+	});
+</script>
+</head>
+<body>
+	<button class="v">Author</button>
+	<button class="w">Socket</button>
+	<button class="s">Send</button>
+</body>
+</html>
