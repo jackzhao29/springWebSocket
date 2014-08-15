@@ -23,23 +23,41 @@
 
 		$('.w').on('click', function() {
 
-			var socket = new SockJS('/hello');
+			var socket = new SockJS('/tmp/ws');
 
 			stompClient = Stomp.over(socket);
 
-			stompClient.connect({}, function(frame) {
-				//setConnected(true);
-				console.log('Connected...: ' + frame);
-				stompClient.subscribe('/topic/greetings', function(greeting) {
-					console.info('>>>>>>' + JSON.parse(greeting.body).content);
+			stompClient.connect("guest", "guest", function() {
+
+				console.info('..connect..success...');
+				
+				//监听服务器发来的消息
+				stompClient.subscribe('/topic/msg', function(fram) {
+					console.info('......msg..' + fram);
 				});
+				
+				//监听服务器发来的消息
+				stompClient.subscribe('/topic/send', function(fram) {
+					console.info('......send..' + fram);
+				});
+
+			}, function() {
+				console.info('..connect..fail...');
 			});
 
 		});
 
 		$('.s').on('click', function() {
-			stompClient.send("/app/hello", {}, JSON.stringify({
+			//给服务器发送消息
+			stompClient.send("/vc/hello", {}, JSON.stringify({
 				'name' : 'xiaocl'
+			}));
+		});
+		
+		$('.s2').on('click', function() {
+			//给服务器发送消息
+			stompClient.send("/vc/hello2", {}, JSON.stringify({
+				'name' : 'xiaocl+'
 			}));
 		});
 	});
@@ -49,5 +67,6 @@
 	<button class="v">Author</button>
 	<button class="w">Socket</button>
 	<button class="s">Send</button>
+	<button class="s2">Send2</button>
 </body>
 </html>

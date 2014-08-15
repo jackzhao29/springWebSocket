@@ -74,7 +74,7 @@
 				<version>9.2.1.v20140609</version>
 				<configuration>
 					<webApp>
-						<contextPath>/</contextPath>
+						<contextPath>/tmp</contextPath>
 					</webApp>
 					<scanIntervalSeconds>8</scanIntervalSeconds>
 					<httpConnector>
